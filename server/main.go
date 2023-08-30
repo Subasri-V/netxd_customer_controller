@@ -1,7 +1,7 @@
 package main
 
 import (
-	pro "github.com/Subasri-V/application-new/netxd_customer/netxd"
+	cus "github.com/Subasri-V/application-new/netxd_customer/netxd"
 	"github.com/Subasri-V/application-new/netxd_customer_dal/services"
 	"context"
 	"fmt"
@@ -16,7 +16,7 @@ import (
 
 func initDatabase(client *mongo.Client) {
 	customerCollection := config.GetCollection(client, constants.DatabaseName, "customers")
-	pro.CustomerDetails = services.InitializeCustomerService(customerCollection, context.Background())
+	controllers.CustomerDetails= services.InitializeCustomerService(context.Background(),customerCollection)
 }
 func main() {
 	mongoClient, err := config.ConnectDataBase()
@@ -33,7 +33,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	pro.RegisterCustomerDetailsServer(s, &controllers.RPCServer{})
+	cus.RegisterCustomerDetailsServer(s, &controllers.RPCServer{})
 
 	fmt.Println("Server listening on", constants.Port)
 	if err := s.Serve(lis); err != nil {
