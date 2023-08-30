@@ -3,9 +3,9 @@ package config
 import (
 	"context"
 	"fmt"
-	"netxd_customer_controller/constants"
 
 	"log"
+	constants "github.com/Subasri-V/application-new/netxd_customer_controller/constants"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
