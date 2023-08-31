@@ -18,7 +18,7 @@ import (
 
 func initDatabase(client *mongo.Client) {
 	customerCollection := config.GetCollection(client, constants.DatabaseName, "customers")
-	controllers.CustomerDetails = services.InitializeCustomerService(context.Background(), customerCollection)
+	controllers.CustomerDetails = services.InitializeCustomerService(context.Background(), customerCollection,client)
 }
 func main() {
 	mongoClient, err := config.ConnectDataBase()

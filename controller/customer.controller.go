@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 
 	cus "github.com/Subasri-V/application-new/netxd_customer/netxd"
 
@@ -32,33 +33,63 @@ func (s *RPCServer) CreateCustomer(ctx context.Context, req *cus.CustomerRequest
 	}
 }
 
-func (s*RPCServer) GetCustomerById(ctx context.Context,req *cus.IdReq)(*cus.IdRes,error){
+func (s *RPCServer) GetCustomerById(ctx context.Context, req *cus.IdReq) (*cus.IdRes, error) {
 	//var getCust int32
-	getCust:=req.Customerid
+	getCust := req.Customerid
 
-	result,err:=CustomerDetails.GetCustomerById(getCust)
+	result, err := CustomerDetails.GetCustomerById(getCust)
 
 	if err != nil {
 		return nil, err
 	} else {
 		responseCustomer := &cus.IdRes{
 			Customerid: result.Customerid,
-			Firstname: result.Firstname,
-			Balance: result.Balance,
+			Firstname:  result.Firstname,
+			Balance:    result.Balance,
 		}
 		return responseCustomer, nil
 	}
 }
 
-func(s* RPCServer) DeleteCustomerById(ctx context.Context,req *cus.DeleteReq)(*cus.DeleteRes,error){
-	deleteCust:=req.Customerid
+func (s *RPCServer) DeleteCustomerById(ctx context.Context, req *cus.DeleteReq) (*cus.DeleteRes, error) {
+	deleteCust := req.Customerid
 
-	_,err:=CustomerDetails.DeleteCustomerById(deleteCust)
+	_, err := CustomerDetails.DeleteCustomerById(deleteCust)
 	if err != nil {
 		return nil, err
 	}
 	return &cus.DeleteRes{
 		Message: "success",
-	},nil
+	}, nil
 
+}
+
+func (s *RPCServer) UpdateCustomerById(ctx context.Context, req *cus.UpdateReq) (*cus.UpdateRes, error) {
+	updateId := req.Customerid
+	updateCust := &models.CustomerDetails{Customerid: req.Customerid, Firstname: req.Firstname, Lastname: req.Lastname, Bankid: req.Bankid, Balance: int32(req.Balance), IsActive: req.IsActive}
+	_, err := CustomerDetails.UpdateCustomerById(updateId, updateCust)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(req.Customerid)
+	return &cus.UpdateRes{
+		Message: "success",
+	}, nil
+
+}
+
+func (s*RPCServer) Transfer(ctx context.Context,req *cus.TransferReq)(*cus.TransferRes,error){
+	id1:=req.SendCustomerId
+	id2:=req.ReceiveCustomerId
+	amt:=req.Amount
+	fmt.Println("s")
+	_,err:=CustomerDetails.Transfer(id1,id2,amt)
+	fmt.Println("s")
+	if err!=nil{
+		return nil,err
+	}
+	return &cus.TransferRes{
+		Message: "Money Transferred Successfully",
+	},nil
+	
 }
